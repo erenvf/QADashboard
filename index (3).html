@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
+ 
 :root {
   --bg:#07090f;--surface:#0e1117;--surface2:#141720;--surface3:#1b2030;
   --border:#1e2535;--border2:#28304a;--border3:#333d5c;
@@ -23,12 +23,12 @@
   --fm:'JetBrains Mono',monospace;
   --r:10px;--r2:6px;
 }
-
+ 
 html{scroll-behavior:smooth}
 body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.5}
-
+ 
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:1;mix-blend-mode:overlay}
-
+ 
 /* ═══ LOCK SCREEN ═══ */
 #lockscreen{
   position:fixed;inset:0;z-index:10000;
@@ -38,7 +38,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   transition:opacity .4s,transform .4s;
 }
 #lockscreen.hide{opacity:0;transform:scale(1.03);pointer-events:none}
-
+ 
 .lock-glow{
   position:absolute;top:50%;left:50%;
   width:600px;height:600px;
@@ -112,13 +112,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   color:var(--red-g);text-align:center;letter-spacing:.5px;
   min-height:16px;transition:opacity .2s;
 }
-
+ 
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
-
+ 
 /* ═══ APP (hidden until unlocked) ═══ */
 #app{display:none}
 #app.visible{display:block}
-
+ 
 /* ═══ HEADER ═══ */
 .header{
   position:sticky;top:0;z-index:200;
@@ -134,23 +134,23 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .clock-time{font-size:18px;font-weight:600;color:var(--text);letter-spacing:2px}
 .lock-out-btn{background:transparent;border:1px solid var(--border2);border-radius:var(--r2);padding:7px 12px;color:var(--text3);font-family:var(--fm);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;letter-spacing:.5px}
 .lock-out-btn:hover{color:var(--red-g);border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.06)}
-
+ 
 /* ═══ NAV ═══ */
 .nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 32px;gap:0}
 .nav::-webkit-scrollbar{display:none}
 .nav-tab{padding:16px 22px;font-family:var(--fb);font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px;letter-spacing:.3px;user-select:none}
 .nav-tab:hover{color:var(--text2)}
 .nav-tab.active{color:var(--text);border-bottom-color:var(--accent)}
-
+ 
 .badge{font-family:var(--fm);font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center;background:var(--red);color:#fff}
 .badge.amber{background:var(--amber);color:#000}
 .badge.grey{background:var(--border2);color:var(--text2)}
-
+ 
 /* ═══ MAIN ═══ */
 .main{max-width:1400px;margin:0 auto;padding:32px;position:relative;z-index:1}
 .section{display:none}
 .section.active{display:block}
-
+ 
 /* ═══ STAT CARDS ═══ */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:32px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;position:relative;overflow:hidden;transition:border-color .2s}
@@ -166,13 +166,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .stat-card.s-amber .stat-num{color:var(--amber-g)}
 .stat-card.s-blue .stat-num{color:var(--accent-g)}
 .stat-card.s-green .stat-num{color:var(--green-g)}
-
+ 
 /* ═══ SEC HEADER ═══ */
 .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .sec-title{font-family:var(--fh);font-size:28px;letter-spacing:2px;color:var(--text)}
 .sec-title em{color:var(--accent);font-style:normal}
 .sec-sub{font-size:13px;color:var(--text3);margin-top:2px;font-family:var(--fm);letter-spacing:.3px}
-
+ 
 /* ═══ BUTTONS ═══ */
 .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r2);font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap;letter-spacing:.2px}
 .btn-primary{background:var(--accent);color:#fff}
@@ -185,7 +185,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ico:hover{background:var(--surface3);color:var(--text)}
 .ico.red:hover{color:var(--red-g);background:rgba(239,68,68,.1)}
 .ico.cyan:hover{color:var(--cyan);background:rgba(6,182,212,.08)}
-
+ 
 /* ═══ FILTER ═══ */
 .filter-bar{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
 .chip{padding:6px 14px;border-radius:20px;font-family:var(--fm);font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text3);transition:all .15s;white-space:nowrap;letter-spacing:.3px}
@@ -206,7 +206,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 #inp-pri.p-high{border-left-color:var(--red-g)}
 #inp-pri.p-mid{border-left-color:var(--amber-g)}
 #inp-pri.p-low{border-left-color:var(--accent-g)}
-
+ 
 /* ═══ TASK CARDS ═══ */
 .task-list{display:flex;flex-direction:column;gap:8px}
 .task-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:flex-start;gap:14px;transition:border-color .15s,background .15s}
@@ -217,12 +217,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .task-card.td:hover{background:rgba(245,158,11,.07)}
 .task-card.dn{opacity:.45}
 .task-card.dn .t-title{text-decoration:line-through;color:var(--text3)}
-
+ 
 .chk{width:20px;height:20px;border:2px solid var(--border2);border-radius:50%;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .15s}
 .chk:hover{border-color:var(--green)}
 .chk.on{background:var(--green);border-color:var(--green)}
 .chk.on::after{content:'✓';color:#000;font-size:11px;font-weight:800}
-
+ 
 .t-body{flex:1;min-width:0}
 .t-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.35}
 .t-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -230,12 +230,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .t-due.ov{color:var(--red-g)}.t-due.td{color:var(--amber-g)}.t-due.sn{color:var(--cyan)}.t-due.ok{color:var(--text3)}
 .t-note{font-size:12px;color:var(--text3);margin-top:5px;line-height:1.5}
 .t-actions{display:flex;gap:4px;align-items:center;flex-shrink:0}
-
+ 
 .pri{font-family:var(--fm);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.5px}
 .pri-h{background:rgba(239,68,68,.18);color:var(--red-g);border:1px solid rgba(239,68,68,.3)}
 .pri-m{background:rgba(245,158,11,.18);color:var(--amber-g);border:1px solid rgba(245,158,11,.3)}
 .pri-l{background:rgba(59,130,246,.15);color:var(--accent-g);border:1px solid rgba(59,130,246,.25)}
-
+ 
 /* ═══ TEAM GRID ═══ */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
 .tcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
@@ -258,11 +258,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .add-btn:hover{color:var(--accent);border-color:var(--accent);background:rgba(59,130,246,.05)}
 .mail-sm{background:transparent;border:1px solid var(--border2);border-radius:var(--r2);padding:8px 11px;color:var(--text3);font-size:13px;cursor:pointer;transition:all .15s}
 .mail-sm:hover{color:var(--cyan);border-color:var(--cyan);background:rgba(6,182,212,.06)}
-
+ 
 /* ═══ EMPTY ═══ */
 .empty{text-align:center;padding:40px 16px;color:var(--text3);font-size:13px;font-weight:500}
 .empty-icon{font-size:36px;margin-bottom:10px;display:block;opacity:.6}
-
+ 
 /* ═══ MODAL ═══ */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.open{opacity:1;pointer-events:all}
@@ -276,7 +276,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .fs option{background:var(--surface2)}
 .fta{resize:vertical;min-height:80px}
 .m-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
-
+ 
 /* ═══ SETTINGS ═══ */
 .set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
 .scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
@@ -287,20 +287,20 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .mrow-name{font-family:var(--fh);font-size:15px;letter-spacing:1px;color:var(--text);min-width:80px}
 .mrow-email{flex:1;background:transparent;border:none;outline:none;color:var(--text2);font-family:var(--fm);font-size:11px;font-weight:500}
 .mrow-email::placeholder{color:var(--text3)}
-
+ 
 /* ═══ MAIL PREVIEW ═══ */
 .mail-preview{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r2);padding:14px;font-family:var(--fm);font-size:11px;font-weight:500;color:var(--text2);line-height:1.8;max-height:220px;overflow-y:auto;white-space:pre-wrap;margin-top:8px}
-
+ 
 /* ═══ TOAST ═══ */
 .toast{position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:13px 20px;font-size:13px;font-weight:600;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.6);transform:translateY(80px);opacity:0;transition:all .3s;max-width:340px}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.ok{border-color:rgba(34,197,94,.4)}
 .toast.err{border-color:rgba(239,68,68,.4)}
-
+ 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-
+ 
 @media(max-width:768px){
   .header{padding:16px;grid-template-columns:1fr;text-align:center;gap:8px}
   .header-right{justify-content:center}
@@ -311,15 +311,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   .stat-row{grid-template-columns:repeat(2,1fr)}
   .set-grid{grid-template-columns:1fr}
 }
-
+ 
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .task-card,.tcard,.stat-card,.scard{animation:up .25s ease both}
-
+ 
 .av-0{background:linear-gradient(135deg,#6366f1,#8b5cf6)}.av-1{background:linear-gradient(135deg,#ec4899,#f43f5e)}.av-2{background:linear-gradient(135deg,#14b8a6,#06b6d4)}.av-3{background:linear-gradient(135deg,#22c55e,#10b981)}.av-4{background:linear-gradient(135deg,#f59e0b,#f97316)}.av-5{background:linear-gradient(135deg,#8b5cf6,#a855f7)}.av-6{background:linear-gradient(135deg,#06b6d4,#3b82f6)}.av-7{background:linear-gradient(135deg,#f43f5e,#ec4899)}.av-8{background:linear-gradient(135deg,#84cc16,#22c55e)}.av-9{background:linear-gradient(135deg,#f97316,#eab308)}.av-10{background:linear-gradient(135deg,#3b82f6,#6366f1)}.av-11{background:linear-gradient(135deg,#10b981,#14b8a6)}.av-12{background:linear-gradient(135deg,#a855f7,#ec4899)}.av-13{background:linear-gradient(135deg,#eab308,#84cc16)}.av-14{background:linear-gradient(135deg,#0ea5e9,#6366f1)}.av-15{background:linear-gradient(135deg,#f43f5e,#f97316)}
 </style>
 </head>
 <body>
-
+ 
 <!-- ═══════════════════════════════════════
      LOCK SCREEN
 ═══════════════════════════════════════ -->
@@ -344,12 +344,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
   </div>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════
      APP
 ═══════════════════════════════════════ -->
 <div id="app">
-
+ 
 <header class="header">
   <div></div>
   <div class="header-center">
@@ -363,7 +363,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="lock-out-btn" onclick="lockOut()" title="Kilitle">🔒 KİLİTLE</button>
   </div>
 </header>
-
+ 
 <nav class="nav">
   <div class="nav-tab active" onclick="tab('overview')" id="tab-overview">📊 GENEL BAKIŞ</div>
   <div class="nav-tab" onclick="tab('metin')" id="tab-metin">📥 <span class="mgr-nav">METİN</span>'DEN GELENLER <span class="badge" id="bdg-metin">0</span></div>
@@ -371,9 +371,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="nav-tab" onclick="tab('todo')" id="tab-todo">✅ TO-DO'LARIM <span class="badge grey" id="bdg-todo">0</span></div>
   <div class="nav-tab" onclick="tab('settings')" id="tab-settings">⚙ AYARLAR</div>
 </nav>
-
+ 
 <main class="main">
-
+ 
   <!-- OVERVIEW -->
   <section class="section active" id="sec-overview">
     <div class="sec-head">
@@ -394,13 +394,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="sec-title" style="font-size:18px;margin-bottom:16px;color:var(--text2)" id="ov-urgent-title">ACİL · GECİKEN & BUGÜN</div>
     <div class="task-list" id="ov-list"></div>
   </section>
-
+ 
   <!-- METİN -->
   <section class="section" id="sec-metin">
     <div class="sec-head">
       <div>
         <div class="sec-title">📥 <span class="mgr-hdr">METİN</span>'DEN <em>GELENLER</em></div>
-        <div class="sec-sub">Yöneticinden atanan görevler</div>
       </div>
       <button class="btn btn-primary" onclick="openM('metin')">+ GÖREV EKLE</button>
     </div>
@@ -413,13 +412,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
     <div class="task-list" id="lst-metin"></div>
   </section>
-
+ 
   <!-- TEAM -->
   <section class="section" id="sec-team">
     <div class="sec-head">
       <div>
         <div class="sec-title">👥 TAKIM <em>LİDERLERİ</em></div>
-        <div class="sec-sub">Alfabetik sıra · görev ata · takip et · hatırlat</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-ghost" onclick="mailAll()">📧 TOPLU HATIRLATMA</button>
@@ -428,13 +426,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
     <div class="team-grid" id="team-grid"></div>
   </section>
-
+ 
   <!-- TODO -->
   <section class="section" id="sec-todo">
     <div class="sec-head">
       <div>
         <div class="sec-title">✅ TO-DO'<em>LARIM</em></div>
-        <div class="sec-sub">Kişisel görev ve takip listem</div>
       </div>
       <button class="btn btn-primary" onclick="openM('todo')">+ EKLE</button>
     </div>
@@ -447,12 +444,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
     <div class="task-list" id="lst-todo"></div>
   </section>
-
+ 
   <!-- SETTINGS -->
   <section class="section" id="sec-settings">
     <div class="sec-head"><div class="sec-title">⚙ <em>AYARLAR</em></div></div>
     <div class="set-grid">
-
+ 
       <div class="scard">
         <div class="scard-head"><div class="scard-title">👤 İSİMLER</div></div>
         <div class="scard-body">
@@ -461,7 +458,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <button class="btn btn-primary" onclick="saveNames()" style="width:100%;justify-content:center">KAYDET</button>
         </div>
       </div>
-
+ 
       <div class="scard">
         <div class="scard-head"><div class="scard-title">👥 TAKIM LİDERLERİ</div></div>
         <div class="scard-body">
@@ -475,7 +472,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           </div>
         </div>
       </div>
-
+ 
       <div class="scard">
         <div class="scard-head"><div class="scard-title">📧 MAİL İMZASI</div></div>
         <div class="scard-body">
@@ -484,7 +481,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <button class="btn btn-primary" onclick="saveSig()" style="width:100%;justify-content:center">KAYDET</button>
         </div>
       </div>
-
+ 
       <div class="scard">
         <div class="scard-head"><div class="scard-title">💾 VERİ YÖNETİMİ</div></div>
         <div class="scard-body" style="display:flex;flex-direction:column;gap:9px">
@@ -499,25 +496,31 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <button class="btn btn-warn" onclick="resetAll()" style="width:100%;justify-content:center">⚠ TÜM VERİLERİ SIFIRLA</button>
         </div>
       </div>
-
+ 
     </div>
   </section>
-
+ 
 </main>
 </div><!-- /app -->
-
+ 
 <!-- TASK MODAL -->
 <div class="overlay" id="ov-task" onclick="closeOutside(event,'ov-task')">
   <div class="modal">
     <div class="m-title" id="m-title">GÖREV EKLE</div>
     <div class="fg" id="fg-ass" style="display:none"><label class="fl">Takım Lideri</label><select class="fs" id="inp-ass"></select></div>
     <div class="fg"><label class="fl">Görev Başlığı *</label><input class="fi" id="inp-title" placeholder="Görev açıklaması..."></div>
-    <div class="fg"><label class="fl">Due Date</label><input class="fi" id="inp-due" type="date"></div>
+    <div class="fg">
+      <label class="fl">Due Date</label>
+      <div style="position:relative">
+        <input class="fi" id="inp-due" type="date" style="padding-right:40px;color-scheme:dark">
+        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none">📅</span>
+      </div>
+    </div>
     <div class="fg"><label class="fl">Öncelik</label>
       <select class="fs" id="inp-pri">
-        <option value="high">● Yüksek (Kritik)</option>
-        <option value="mid" selected>● Orta (Normal)</option>
-        <option value="low">● Düşük (İsteğe Bağlı)</option>
+        <option value="high">● Yüksek</option>
+        <option value="mid" selected>● Orta</option>
+        <option value="low">● Düşük</option>
       </select>
     </div>
     <div class="fg"><label class="fl">Not</label><textarea class="fta" id="inp-note" placeholder="Ek bilgi..."></textarea></div>
@@ -527,7 +530,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
   </div>
 </div>
-
+ 
 <!-- MAIL MODAL -->
 <div class="overlay" id="ov-mail" onclick="closeOutside(event,'ov-mail')">
   <div class="modal">
@@ -542,9 +545,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 // ══════════════════════════════════════
 // PASSWORD
@@ -553,12 +556,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 const PW_HASH = '3e3f8e0de07f4e5b5db7e0c2a7b2e3a4d1f6c9b8e5a2d7f4c1b8e5a2d7f4c1b'; // placeholder, replaced below
 // fcyey'nin hash'i runtime'da üretilir
 let unlocked = false;
-
+ 
 async function sha256(msg){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
+ 
 async function tryUnlock(){
   const val = document.getElementById('pw-input').value;
   const hash = await sha256(val);
@@ -582,14 +585,14 @@ async function tryUnlock(){
     inp.value='';inp.focus();
   }
 }
-
+ 
 function togglePw(){
   const inp=document.getElementById('pw-input');
   const eye=document.getElementById('pw-eye');
   if(inp.type==='password'){inp.type='text';eye.textContent='🙈';}
   else{inp.type='password';eye.textContent='👁';}
 }
-
+ 
 function lockOut(){
   sessionStorage.removeItem('qa_unlocked');
   unlocked=false;
@@ -600,14 +603,14 @@ function lockOut(){
   document.getElementById('pw-input').value='';
   document.getElementById('pw-input').focus();
 }
-
+ 
 // Oturum açık mı kontrol et (aynı sekme)
 if(sessionStorage.getItem('qa_unlocked')==='1'){
   document.getElementById('lockscreen').style.display='none';
   document.getElementById('app').classList.add('visible');
   unlocked=true;
 }
-
+ 
 // ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
@@ -621,13 +624,13 @@ let cfg={myName:'Eren',managerName:'Metin',signature:'Saygılarımla,\nEren\nQA 
 let data={metin:[],team:[],todo:[]};
 let filters={metin:'all',todo:'all'};
 let mMode='',mEditId=null;
-
+ 
 function load(){
   try{const s=localStorage.getItem('qa_v4');if(s){const p=JSON.parse(s);if(p.data)data=p.data;if(p.cfg)cfg={...cfg,...p.cfg};}}catch(e){}
 }
 function save(){localStorage.setItem('qa_v4',JSON.stringify({data,cfg}))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
-
+ 
 // ══════════════════════════════════════
 // DATE
 // ══════════════════════════════════════
@@ -644,7 +647,7 @@ function dLbl(due,done){
   return{c:'ok',t:`${d} gün · ${f}`};
 }
 function fmtD(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d} ${['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][+m-1]} ${y}`}
-
+ 
 // ══════════════════════════════════════
 // TABS
 // ══════════════════════════════════════
@@ -655,7 +658,7 @@ function tab(id){
   document.getElementById('tab-'+id).classList.add('active');
   if(id==='settings')renderSettings();else renderAll();
 }
-
+ 
 // ══════════════════════════════════════
 // MODAL
 // ══════════════════════════════════════
@@ -666,12 +669,13 @@ function updatePriColor(){
   else if(sel.value==='mid') sel.classList.add('p-mid');
   else sel.classList.add('p-low');
 }
-
+ 
 function arr_(m){return m==='team'?data.team:m==='metin'?data.metin:data.todo}
-
+ 
 function openM(mode,id=null){
   mMode=mode;mEditId=id;
-  ['inp-title','inp-due','inp-note'].forEach(x=>document.getElementById(x).value='');
+  ['inp-title','inp-note'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('inp-due').value=todayStr(); // default: bugün
   document.getElementById('inp-pri').value='mid';
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   document.getElementById('inp-ass').innerHTML='<option value="">Seç...</option>'+sorted.map(m=>`<option>${esc(m.name)}</option>`).join('');
@@ -686,7 +690,7 @@ function openM(mode,id=null){
 }
 function closeM(id){document.getElementById(id).classList.remove('open')}
 function closeOutside(e,id){if(e.target===document.getElementById(id))closeM(id)}
-
+ 
 function saveTask(){
   const title=document.getElementById('inp-title').value.trim();
   if(!title){document.getElementById('inp-title').style.borderColor='var(--red)';return;}
@@ -701,14 +705,14 @@ function saveTask(){
   save();closeM('ov-task');renderAll();
   toast('✅ Görev kaydedildi','ok');
 }
-
+ 
 // ══════════════════════════════════════
 // ACTIONS
 // ══════════════════════════════════════
 function toggle(a,id){const arr=arr_(a),t=arr.find(x=>x.id===id);if(t)t.done=!t.done;save();renderAll()}
 function del(a,id){const arr=arr_(a),i=arr.findIndex(x=>x.id===id);if(i!==-1)arr.splice(i,1);save();renderAll()}
 function setF(sec,val,el){filters[sec]=val;el.closest('.filter-bar').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderAll()}
-
+ 
 // ══════════════════════════════════════
 // MAIL
 // ══════════════════════════════════════
@@ -749,7 +753,7 @@ function mailAll(){
   },i*700));
   toast(`📧 ${aff.length} kişiye mail hazırlanıyor...`,'ok');
 }
-
+ 
 // ══════════════════════════════════════
 // SETTINGS
 // ══════════════════════════════════════
@@ -790,7 +794,7 @@ function saveNames(){
 }
 function saveSig(){cfg.signature=document.getElementById('s-sig').value;save();toast('✅ İmza kaydedildi','ok')}
 function updateLabels(){document.querySelectorAll('.mgr-nav,.mgr-hdr').forEach(el=>el.textContent=cfg.managerName.toUpperCase())}
-
+ 
 // ══════════════════════════════════════
 // EXPORT / IMPORT / CLEAR
 // ══════════════════════════════════════
@@ -798,7 +802,7 @@ function expData(){const blob=new Blob([JSON.stringify({data,cfg},null,2)],{type
 function impData(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(p.data)data=p.data;if(p.cfg)cfg={...cfg,...p.cfg};save();renderAll();renderSettings();updateLabels();toast('✅ İçe aktarıldı','ok');}catch{toast('❌ Geçersiz dosya','err');}};r.readAsText(f);ev.target.value=''}
 function clrDone(sec){if(!confirm('Tamamlanan görevler silinecek. Emin misin?'))return;if(sec==='all'||sec==='metin')data.metin=data.metin.filter(t=>!t.done);if(sec==='all'||sec==='team')data.team=data.team.filter(t=>!t.done);if(sec==='all'||sec==='todo')data.todo=data.todo.filter(t=>!t.done);save();renderAll();toast('🗑 Tamamlananlar temizlendi','ok')}
 function resetAll(){if(!confirm('TÜM görev verileri silinecek! Emin misin?'))return;data={metin:[],team:[],todo:[]};save();renderAll();toast('⚠ Tüm görevler silindi','err')}
-
+ 
 // ══════════════════════════════════════
 // RENDER HELPERS
 // ══════════════════════════════════════
@@ -852,12 +856,12 @@ function teamItem(t){
     </div>
   </div>`;
 }
-
+ 
 // ══════════════════════════════════════
 // RENDER SECTIONS
 // ══════════════════════════════════════
 function renderAll(){renderMetin();renderTeam();renderTodo();renderOverview();updateBadges()}
-
+ 
 function renderMetin(){
   const el=document.getElementById('lst-metin');
   const tasks=sortT(applyF(data.metin,filters.metin));
@@ -900,16 +904,16 @@ function renderTeam(){
   }).join('');
 }
 function openTeamM(name){openM('team');setTimeout(()=>{document.getElementById('inp-ass').value=name},60)}
-
+ 
 let ovMode='metin'; // 'metin' | 'team' | 'todo'
-
+ 
 function switchOv(mode, el){
   ovMode=mode;
   document.querySelectorAll('.ov-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   renderOverview();
 }
-
+ 
 function renderOverview(){
   const src = ovMode==='metin' ? data.metin : ovMode==='team' ? data.team : data.todo;
   let ov=0,td=0,up=0,dn=0;
@@ -918,17 +922,17 @@ function renderOverview(){
   document.getElementById('s-td').textContent=td;
   document.getElementById('s-up').textContent=up;
   document.getElementById('s-dn').textContent=dn;
-
+ 
   const el=document.getElementById('ov-list');
   const titleEl=document.getElementById('ov-urgent-title');
-
+ 
   if(ovMode==='team'){
     // For team: show grouped upcoming + overdue by person
     titleEl.textContent='KİŞİ BAZLI · ACİL & YAKLAŞAN';
     renderTeamOverview(el);
     return;
   }
-
+ 
   titleEl.textContent='ACİL · GECİKEN & BUGÜN';
   const urgent=src.filter(t=>!t.done&&(dLeft(t.due)<0||dLeft(t.due)===0));
   urgent.sort((a,b)=>(dLeft(a.due)||0)-(dLeft(b.due)||0));
@@ -943,7 +947,7 @@ function renderOverview(){
     </div>`;
   }).join('');
 }
-
+ 
 function renderTeamOverview(el){
   // Group tasks by member, show only active tasks, sorted by urgency
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
@@ -961,9 +965,9 @@ function renderTeamOverview(el){
   });
   // Sort groups: overdue first, then by soonest due
   groups.sort((a,b)=>a.minDays-b.minDays);
-
+ 
   if(!groups.length){el.innerHTML=`<div class="empty"><span class="empty-icon">🎉</span>Aktif görev yok!</div>`;return;}
-
+ 
   el.innerHTML=groups.map(({m,tasks,minDays})=>{
     // Urgency badge for member
     let urgCls='urg-ok', urgTxt='';
@@ -971,7 +975,7 @@ function renderTeamOverview(el){
     else if(minDays===0){urgCls='urg-hot';urgTxt='BUGÜN BİTİYOR';}
     else if(minDays<=3){urgCls='urg-warm';urgTxt=`EN AZ ${minDays} GÜN`;}
     else{urgCls='urg-ok';urgTxt=`EN AZ ${minDays} GÜN`;}
-
+ 
     const taskItems=tasks.map(t=>{
       const dl=dLbl(t.due,t.done),st=dSt(t.due,t.done);
       const cls=st==='ov'?'ov':st==='td'?'td':'';
@@ -982,7 +986,7 @@ function renderTeamOverview(el){
         </div>
       </div>`;
     }).join('');
-
+ 
     return`<div class="upcoming-group">
       <div class="upcoming-group-head">
         <div class="upcoming-group-name">${m.name.toUpperCase()}</div>
@@ -993,7 +997,7 @@ function renderTeamOverview(el){
     </div>`;
   }).join('');
 }
-
+ 
 function updateBadges(){
   const mo=data.metin.filter(t=>!t.done&&dLeft(t.due)<0).length;
   const ma=data.metin.filter(t=>!t.done).length;
@@ -1004,13 +1008,13 @@ function updateBadges(){
   const bt=document.getElementById('bdg-team');bt.textContent=to||ta;bt.className='badge'+(to?'':(ta?' amber':' grey'));
   document.getElementById('bdg-todo').textContent=doa;
 }
-
+ 
 // ══════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════
 let tTimer;
 function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(type?' '+type:'');clearTimeout(tTimer);tTimer=setTimeout(()=>el.classList.remove('show'),3000)}
-
+ 
 // ══════════════════════════════════════
 // CLOCK
 // ══════════════════════════════════════
@@ -1019,7 +1023,7 @@ function tick(){
   const c=document.getElementById('clock');if(c)c.textContent=n.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   const d=document.getElementById('date-lbl');if(d)d.textContent=n.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
 }
-
+ 
 // ══════════════════════════════════════
 // KEYBOARD
 // ══════════════════════════════════════
@@ -1030,7 +1034,7 @@ document.addEventListener('keydown',e=>{
     if(!unlocked&&e.target===document.getElementById('pw-input')){tryUnlock();}
   }
 });
-
+ 
 // ══════════════════════════════════════
 // START
 // ══════════════════════════════════════
@@ -1038,7 +1042,7 @@ function startApp(){
   load();updateLabels();renderAll();tick();
   setInterval(tick,1000);setInterval(renderAll,60000);
 }
-
+ 
 // Auto-start if already unlocked
 if(unlocked) startApp();
 else {
@@ -1049,3 +1053,4 @@ else {
 </script>
 </body>
 </html>
+ 
