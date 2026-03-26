@@ -155,7 +155,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 /* ═══ STAT CARDS ═══ */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:32px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;position:relative;overflow:hidden;transition:border-color .2s}
-.stat-card:hover{border-color:var(--border2)}
+.stat-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.stat-card.active-filter{border-color:var(--border3);box-shadow:0 0 0 2px var(--border3)}
 .stat-card::before{content:'';position:absolute;inset:0 0 auto 0;height:2px}
 .stat-card.s-red::before{background:linear-gradient(90deg,var(--red),var(--red-g))}
 .stat-card.s-amber::before{background:linear-gradient(90deg,var(--amber),var(--amber-g))}
@@ -196,6 +197,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .ov-tab{padding:8px 18px;border-radius:var(--r2);border:none;background:transparent;color:var(--text3);font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.3px;white-space:nowrap}
 .ov-tab:hover{color:var(--text2)}
 .ov-tab.active{background:var(--accent);color:#fff}
+.cat-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:4px}
+.cat-tab{flex:1;padding:9px 10px;border-radius:var(--r2);border:none;background:transparent;color:var(--text3);font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;white-space:nowrap}
+.cat-tab:hover{color:var(--text2)}
+.cat-tab.active{background:var(--accent);color:#fff}
 .upcoming-group{margin-bottom:18px}
 .upcoming-group-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .upcoming-group-name{font-family:var(--fh);font-size:16px;letter-spacing:1px;color:var(--text)}
@@ -367,9 +372,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 <nav class="nav">
   <div class="nav-tab active" onclick="tab('overview')" id="tab-overview">📊 GENEL BAKIŞ</div>
-  <div class="nav-tab" onclick="tab('metin')" id="tab-metin">📥 <span class="mgr-nav">METİN</span>'DEN GELENLER <span class="badge" id="bdg-metin">0</span></div>
   <div class="nav-tab" onclick="tab('team')" id="tab-team">👥 TAKIM LİDERLERİ <span class="badge amber" id="bdg-team">0</span></div>
-  <div class="nav-tab" onclick="tab('todo')" id="tab-todo">✅ TO-DO'LARIM <span class="badge grey" id="bdg-todo">0</span></div>
   <div class="nav-tab" onclick="tab('settings')" id="tab-settings">⚙ AYARLAR</div>
 </nav>
 
@@ -379,42 +382,42 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <section class="section active" id="sec-overview">
     <div class="sec-head">
       <div class="sec-title">GENEL <em>DURUM</em></div>
-      <!-- Overview sub-tabs -->
-      <div class="ov-tabs">
-        <button class="ov-tab active" onclick="switchOv('metin',this)">📥 METİN'DEN</button>
-        <button class="ov-tab" onclick="switchOv('team',this)">👥 TAKIM</button>
-        <button class="ov-tab" onclick="switchOv('todo',this)">✅ TO-DO</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="ov-tabs">
+          <button class="ov-tab active" onclick="switchOv('metin',this)">📥 <span class="mgr-ov">METİN</span>'DEN</button>
+          <button class="ov-tab" onclick="switchOv('team',this)">👥 TAKIM</button>
+          <button class="ov-tab" onclick="switchOv('todo',this)">✅ TO-DO</button>
+        </div>
+        <button class="btn btn-primary" onclick="openMFromOverview()">+ GÖREV EKLE</button>
       </div>
     </div>
     <div class="stat-row">
-      <div class="stat-card s-red"><div class="stat-label">GECİKEN</div><div class="stat-num" id="s-ov">0</div></div>
-      <div class="stat-card s-amber"><div class="stat-label">BUGÜN BİTİYOR</div><div class="stat-num" id="s-td">0</div></div>
-      <div class="stat-card s-blue"><div class="stat-label">YAKLAŞAN · 7 GÜN</div><div class="stat-num" id="s-up">0</div></div>
-      <div class="stat-card s-green"><div class="stat-label">TAMAMLANAN</div><div class="stat-num" id="s-dn">0</div></div>
+      <div class="stat-card s-red" onclick="setOvFilter('overdue',this)" style="cursor:pointer"><div class="stat-label">⚠ GECİKEN</div><div class="stat-num" id="s-ov">0</div></div>
+      <div class="stat-card s-amber" onclick="setOvFilter('today',this)" style="cursor:pointer"><div class="stat-label">⏰ BUGÜN BİTİYOR</div><div class="stat-num" id="s-td">0</div></div>
+      <div class="stat-card s-blue" onclick="setOvFilter('upcoming',this)" style="cursor:pointer"><div class="stat-label">📅 YAKLAŞAN · 7 GÜN</div><div class="stat-num" id="s-up">0</div></div>
+      <div class="stat-card s-green" onclick="setOvFilter('done',this)" style="cursor:pointer"><div class="stat-label">✓ TAMAMLANAN</div><div class="stat-num" id="s-dn">0</div></div>
     </div>
-    <div class="sec-title" style="font-size:18px;margin-bottom:16px;color:var(--text2)" id="ov-urgent-title">ACİL · GECİKEN & BUGÜN</div>
+    <!-- METİN filter bar -->
+    <div id="ov-filter-bar-metin" class="filter-bar" style="display:flex">
+      <span class="chip active" onclick="setF('metin','all',this);renderOverview()">TÜMÜ</span>
+      <span class="chip" onclick="setF('metin','overdue',this);renderOverview()">⚠ GECİKEN</span>
+      <span class="chip" onclick="setF('metin','today',this);renderOverview()">⏰ BUGÜN</span>
+      <span class="chip" onclick="setF('metin','upcoming',this);renderOverview()">📅 YAKLAŞAN</span>
+      <span class="chip" onclick="setF('metin','done',this);renderOverview()">✓ TAMAMLANAN</span>
+    </div>
+    <!-- TODO filter bar -->
+    <div id="ov-filter-bar-todo" class="filter-bar" style="display:none">
+      <span class="chip active" onclick="setF('todo','all',this);renderOverview()">TÜMÜ</span>
+      <span class="chip" onclick="setF('todo','overdue',this);renderOverview()">⚠ GECİKEN</span>
+      <span class="chip" onclick="setF('todo','today',this);renderOverview()">⏰ BUGÜN</span>
+      <span class="chip" onclick="setF('todo','upcoming',this);renderOverview()">📅 YAKLAŞAN</span>
+      <span class="chip" onclick="setF('todo','done',this);renderOverview()">✓ TAMAMLANAN</span>
+    </div>
+    <div class="sec-title" style="font-size:16px;margin-bottom:14px;color:var(--text2)" id="ov-urgent-title">ACİL & YAKLAŞAN</div>
     <div class="task-list" id="ov-list"></div>
   </section>
 
-  <!-- METİN -->
-  <section class="section" id="sec-metin">
-    <div class="sec-head">
-      <div>
-        <div class="sec-title">📥 <span class="mgr-hdr">METİN</span>'DEN <em>GELENLER</em></div>
-      </div>
-      <button class="btn btn-primary" onclick="openM('metin')">+ GÖREV EKLE</button>
-    </div>
-    <div class="filter-bar">
-      <span class="chip active" onclick="setF('metin','all',this)">TÜMÜ</span>
-      <span class="chip" onclick="setF('metin','overdue',this)">⚠ GECİKEN</span>
-      <span class="chip" onclick="setF('metin','today',this)">⏰ BUGÜN</span>
-      <span class="chip" onclick="setF('metin','upcoming',this)">📅 YAKLAŞAN</span>
-      <span class="chip" onclick="setF('metin','done',this)">✓ TAMAMLANAN</span>
-    </div>
-    <div class="task-list" id="lst-metin"></div>
-  </section>
-
-  <!-- TEAM -->
+  <!-- TEAM (standalone) -->
   <section class="section" id="sec-team">
     <div class="sec-head">
       <div>
@@ -426,24 +429,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
     </div>
     <div class="team-grid" id="team-grid"></div>
-  </section>
-
-  <!-- TODO -->
-  <section class="section" id="sec-todo">
-    <div class="sec-head">
-      <div>
-        <div class="sec-title">✅ TO-DO'<em>LARIM</em></div>
-      </div>
-      <button class="btn btn-primary" onclick="openM('todo')">+ EKLE</button>
-    </div>
-    <div class="filter-bar">
-      <span class="chip active" onclick="setF('todo','all',this)">TÜMÜ</span>
-      <span class="chip" onclick="setF('todo','overdue',this)">⚠ GECİKEN</span>
-      <span class="chip" onclick="setF('todo','today',this)">⏰ BUGÜN</span>
-      <span class="chip" onclick="setF('todo','upcoming',this)">📅 YAKLAŞAN</span>
-      <span class="chip" onclick="setF('todo','done',this)">✓ TAMAMLANAN</span>
-    </div>
-    <div class="task-list" id="lst-todo"></div>
   </section>
 
   <!-- SETTINGS -->
@@ -508,6 +493,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <div class="overlay" id="ov-task" onclick="closeOutside(event,'ov-task')">
   <div class="modal">
     <div class="m-title" id="m-title">GÖREV EKLE</div>
+    <!-- Category selector (only shown for new tasks) -->
+    <div class="fg" id="fg-cat">
+      <label class="fl">Kategori</label>
+      <div class="cat-tabs">
+        <button class="cat-tab active" onclick="setCat('metin',this)" id="cat-metin">📥 <span class="mgr-cat">METİN</span>'DEN</button>
+        <button class="cat-tab" onclick="setCat('team',this)" id="cat-team">👥 TAKIM</button>
+        <button class="cat-tab" onclick="setCat('todo',this)" id="cat-todo">✅ TO-DO</button>
+      </div>
+    </div>
     <div class="fg" id="fg-ass" style="display:none"><label class="fl">Takım Lideri</label><select class="fs" id="inp-ass"></select></div>
     <div class="fg"><label class="fl">Görev Başlığı *</label><input class="fi" id="inp-title" placeholder="Görev açıklaması..."></div>
     <div class="fg">
@@ -726,17 +720,53 @@ function updatePriColor(){
 
 function arr_(m){return m==='team'?data.team:m==='metin'?data.metin:data.todo}
 
+// Kategori seçici (yeni görev eklerken)
+function setCat(mode, el){
+  mMode=mode;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('fg-ass').style.display=mode==='team'?'block':'none';
+}
+
+// Genel Bakış'tan görev ekle — aktif taba göre kategori seç
+function openMFromOverview(){
+  const mode = ovMode==='team' ? 'team' : ovMode==='todo' ? 'todo' : 'metin';
+  openM(mode);
+}
+
 function openM(mode,id=null){
   mMode=mode;mEditId=id;
   ['inp-title','inp-note'].forEach(x=>document.getElementById(x).value='');
-  document.getElementById('inp-due').value=todayStr(); // default: bugün
+  document.getElementById('inp-due').value=todayStr();
   document.getElementById('inp-pri').value='mid';
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   document.getElementById('inp-ass').innerHTML='<option value="">Seç...</option>'+sorted.map(m=>`<option>${esc(m.name)}</option>`).join('');
   document.getElementById('fg-ass').style.display=mode==='team'?'block':'none';
-  const titles={team:id?'GÖREVI DÜZENLE':'TAKIM LİDERİNE GÖREV ATA',metin:id?'GÖREVI DÜZENLE':`${cfg.managerName.toUpperCase()}'DEN GELEN GÖREVI EKLE`,todo:id?'GÖREVI DÜZENLE':'TO-DO EKLE'};
+
+  const isEdit=!!id;
+  // Kategori seçici sadece yeni görevde göster
+  document.getElementById('fg-cat').style.display=isEdit?'none':'block';
+  if(!isEdit){
+    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+    const catEl=document.getElementById('cat-'+mode);
+    if(catEl) catEl.classList.add('active');
+  }
+
+  const mgrName=cfg.managerName.toUpperCase();
+  document.querySelectorAll('.mgr-cat').forEach(el=>el.textContent=cfg.managerName.toUpperCase());
+  const titles={team:isEdit?'GÖREVI DÜZENLE':'TAKIM LİDERİNE GÖREV ATA',metin:isEdit?'GÖREVI DÜZENLE':`${mgrName}'DEN GELEN GÖREVI EKLE`,todo:isEdit?'GÖREVI DÜZENLE':'TO-DO EKLE'};
   document.getElementById('m-title').textContent=titles[mode];
-  if(id){const t=arr_(mode).find(x=>x.id===id);if(t){document.getElementById('inp-title').value=t.title;document.getElementById('inp-due').value=t.due||'';document.getElementById('inp-pri').value=t.priority||'mid';document.getElementById('inp-note').value=t.note||'';if(mode==='team')document.getElementById('inp-ass').value=t.assignee||'';}}
+
+  if(id){
+    const t=arr_(mode).find(x=>x.id===id);
+    if(t){
+      document.getElementById('inp-title').value=t.title;
+      document.getElementById('inp-due').value=t.due||'';
+      document.getElementById('inp-pri').value=t.priority||'mid';
+      document.getElementById('inp-note').value=t.note||'';
+      if(mode==='team')document.getElementById('inp-ass').value=t.assignee||'';
+    }
+  }
   document.getElementById('ov-task').classList.add('open');
   setTimeout(()=>document.getElementById('inp-title').focus(),100);
   updatePriColor();
@@ -874,7 +904,9 @@ async function saveSig(){
   await saveCfgToDb();
   toast('✅ İmza kaydedildi','ok');
 }
-function updateLabels(){document.querySelectorAll('.mgr-nav,.mgr-hdr').forEach(el=>el.textContent=cfg.managerName.toUpperCase())}
+function updateLabels(){
+  document.querySelectorAll('.mgr-nav,.mgr-hdr,.mgr-ov,.mgr-cat').forEach(el=>el.textContent=cfg.managerName.toUpperCase());
+}
 
 // ══════════════════════════════════════
 // EXPORT / IMPORT / CLEAR
@@ -961,7 +993,7 @@ function teamItem(t){
 // ══════════════════════════════════════
 // RENDER SECTIONS
 // ══════════════════════════════════════
-function renderAll(){renderMetin();renderTeam();renderTodo();renderOverview();updateBadges()}
+function renderAll(){renderTeam();renderOverview();updateBadges()}
 
 function renderMetin(){
   const el=document.getElementById('lst-metin');
@@ -1006,12 +1038,29 @@ function renderTeam(){
 }
 function openTeamM(name){openM('team');setTimeout(()=>{document.getElementById('inp-ass').value=name},60)}
 
-let ovMode='metin'; // 'metin' | 'team' | 'todo'
+let ovMode='metin';
+let ovFilter='active'; // 'active' | 'overdue' | 'today' | 'upcoming' | 'done'
 
 function switchOv(mode, el){
   ovMode=mode;
+  ovFilter='active';
   document.querySelectorAll('.ov-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
+  document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
+  // Filter bar görünürlüğü
+  document.getElementById('ov-filter-bar-metin').style.display=mode==='metin'?'flex':'none';
+  document.getElementById('ov-filter-bar-todo').style.display=mode==='todo'?'flex':'none';
+  renderOverview();
+}
+
+function setOvFilter(filter, cardEl){
+  // Toggle: tıklanan kart zaten aktifse sıfırla
+  if(ovFilter===filter){ ovFilter='active'; cardEl.classList.remove('active-filter'); }
+  else {
+    ovFilter=filter;
+    document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
+    cardEl.classList.add('active-filter');
+  }
   renderOverview();
 }
 
@@ -1028,62 +1077,128 @@ function renderOverview(){
   const titleEl=document.getElementById('ov-urgent-title');
 
   if(ovMode==='team'){
-    // For team: show grouped upcoming + overdue by person
-    titleEl.textContent='KİŞİ BAZLI · ACİL & YAKLAŞAN';
+    titleEl.textContent = ovFilter==='done' ? 'TAMAMLANAN GÖREVLER' :
+                          ovFilter==='overdue' ? 'GECİKEN GÖREVLER' :
+                          ovFilter==='today' ? 'BUGÜN BİTEN GÖREVLER' :
+                          ovFilter==='upcoming' ? 'YAKLAŞAN GÖREVLER (7 GÜN)' :
+                          'KİŞİ BAZLI · TÜM AKTİF GÖREVLER';
     renderTeamOverview(el);
     return;
   }
 
-  titleEl.textContent='ACİL · GECİKEN & BUGÜN';
-  const urgent=src.filter(t=>!t.done&&(dLeft(t.due)<0||dLeft(t.due)===0));
-  urgent.sort((a,b)=>(dLeft(a.due)||0)-(dLeft(b.due)||0));
-  if(!urgent.length){el.innerHTML=`<div class="empty"><span class="empty-icon">🎉</span>Geciken veya bugün biten görev yok!</div>`;return;}
-  el.innerHTML=urgent.map(t=>{
+  // METİN veya TODO: chip filter bar'a göre filtrele
+  const aName = ovMode==='metin'?'metin':'todo';
+  const chipFilter = ovMode==='metin' ? filters.metin : filters.todo;
+
+  let tasks;
+  let title;
+
+  // Stat kart filtresi öncelikli, yoksa chip filter
+  if(ovFilter==='done'){
+    tasks=src.filter(t=>t.done);
+    title='TAMAMLANAN GÖREVLER';
+  } else if(ovFilter==='overdue'){
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)<0);
+    title='GECİKEN GÖREVLER';
+  } else if(ovFilter==='today'){
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)===0);
+    title='BUGÜN BİTEN GÖREVLER';
+  } else if(ovFilter==='upcoming'){
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=7);
+    title='YAKLAŞAN GÖREVLER · 7 GÜN';
+  } else {
+    // Chip filter
+    tasks=applyF(src,chipFilter);
+    title=chipFilter==='done'?'TAMAMLANAN GÖREVLER':chipFilter==='overdue'?'GECİKEN GÖREVLER':chipFilter==='today'?'BUGÜN BİTEN GÖREVLER':chipFilter==='upcoming'?'YAKLAŞAN GÖREVLER':'TÜM GÖREVLER';
+  }
+
+  titleEl.textContent=title;
+
+  tasks.sort((a,b)=>{
+    if(a.done!==b.done) return a.done?1:-1;
+    const ord={ov:0,td:1,sn:2,ok:3,done:4};
+    return(ord[dSt(a.due,a.done)]??3)-(ord[dSt(b.due,b.done)]??3)||(dLeft(a.due)??999)-(dLeft(b.due)??999);
+  });
+
+  if(!tasks.length){
+    el.innerHTML=`<div class="empty"><span class="empty-icon">🎉</span>${ovFilter==='done'?'Tamamlanan görev yok':'Aktif görev yok!'}</div>`;
+    return;
+  }
+
+  el.innerHTML=tasks.map(t=>{
     const dl=dLbl(t.due,t.done),st=dSt(t.due,t.done);
-    return`<div class="task-card ${st==='ov'?'ov':'td'}">
+    const cls=t.done?'dn':st==='ov'?'ov':st==='td'?'td':'';
+    const d=dLeft(t.due);
+    let urgCls='',urgTxt='';
+    if(!t.done){
+      if(d<0){urgCls='urg-hot';urgTxt=`${Math.abs(d)} GÜN GECİKTİ`;}
+      else if(d===0){urgCls='urg-hot';urgTxt='BUGÜN BİTİYOR';}
+      else if(d<=3){urgCls='urg-warm';urgTxt=`${d} GÜN KALDI`;}
+      else if(d<=7){urgCls='urg-ok';urgTxt=`${d} GÜN KALDI`;}
+    }
+    const urgBadge=urgTxt?`<span class="upcoming-urgency ${urgCls}" style="font-size:10px">${urgTxt}</span>`:'';
+    return`<div class="task-card ${cls}">
+      <div class="chk ${t.done?'on':''}" onclick="toggle('${aName}','${t.id}');renderOverview()" title="${t.done?'Geri Al':'Tamamlandı'}"></div>
       <div class="t-body">
         <div class="t-title">${esc(t.title)}</div>
-        <div class="t-meta"><span class="t-due ${dl.c}">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+        <div class="t-meta">${urgBadge}<span class="t-due ${dl.c}">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+        ${t.note?`<div class="t-note">${esc(t.note)}</div>`:''}
+      </div>
+      <div class="t-actions">
+        <button class="ico" onclick="openM('${aName}','${t.id}')" title="Düzenle">✏️</button>
+        <button class="ico red" onclick="del('${aName}','${t.id}')" title="Sil">✕</button>
       </div>
     </div>`;
   }).join('');
 }
 
 function renderTeamOverview(el){
-  // Group tasks by member, show only active tasks, sorted by urgency
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   const groups=[];
   sorted.forEach(m=>{
-    const tasks=data.team.filter(t=>t.assignee===m.name&&!t.done);
+    let tasks=data.team.filter(t=>t.assignee===m.name);
+    // Apply filter
+    if(ovFilter==='done') tasks=tasks.filter(t=>t.done);
+    else if(ovFilter==='overdue') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)<0);
+    else if(ovFilter==='today') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)===0);
+    else if(ovFilter==='upcoming') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=7);
+    else tasks=tasks.filter(t=>!t.done);
     if(!tasks.length) return;
-    // Sort tasks by days remaining
     const sTasks=[...tasks].sort((a,b)=>{
-      const da=dLeft(a.due)??999, db=dLeft(b.due)??999;
-      return da-db;
+      if(ovFilter==='done') return(b.createdAt||0)-(a.createdAt||0);
+      return(dLeft(a.due)??999)-(dLeft(b.due)??999);
     });
-    const minDays=dLeft(sTasks[0].due)??999;
+    const minDays=ovFilter==='done'?999:(dLeft(sTasks[0].due)??999);
     groups.push({m,tasks:sTasks,minDays});
   });
-  // Sort groups: overdue first, then by soonest due
-  groups.sort((a,b)=>a.minDays-b.minDays);
+  if(ovFilter!=='done') groups.sort((a,b)=>a.minDays-b.minDays);
 
-  if(!groups.length){el.innerHTML=`<div class="empty"><span class="empty-icon">🎉</span>Aktif görev yok!</div>`;return;}
+  if(!groups.length){
+    el.innerHTML=`<div class="empty"><span class="empty-icon">🎉</span>${ovFilter==='done'?'Tamamlanan görev yok':'Aktif görev yok!'}</div>`;
+    return;
+  }
 
   el.innerHTML=groups.map(({m,tasks,minDays})=>{
-    // Urgency badge for member
-    let urgCls='urg-ok', urgTxt='';
-    if(minDays<0){urgCls='urg-hot';urgTxt=`${Math.abs(minDays)} GÜN GECİKTİ`;}
+    let urgCls='urg-ok',urgTxt='';
+    if(ovFilter==='done'){urgCls='urg-ok';urgTxt='TAMAMLANDI';}
+    else if(minDays<0){urgCls='urg-hot';urgTxt=`${Math.abs(minDays)} GÜN GECİKTİ`;}
     else if(minDays===0){urgCls='urg-hot';urgTxt='BUGÜN BİTİYOR';}
     else if(minDays<=3){urgCls='urg-warm';urgTxt=`EN AZ ${minDays} GÜN`;}
     else{urgCls='urg-ok';urgTxt=`EN AZ ${minDays} GÜN`;}
 
     const taskItems=tasks.map(t=>{
       const dl=dLbl(t.due,t.done),st=dSt(t.due,t.done);
-      const cls=st==='ov'?'ov':st==='td'?'td':'';
+      const cls=t.done?'dn':st==='ov'?'ov':st==='td'?'td':'';
       return`<div class="task-card ${cls}" style="margin-bottom:0">
+        <div class="chk ${t.done?'on':''}" onclick="toggle('team','${t.id}');renderOverview()" title="${t.done?'Geri Al':'Tamamlandı'}"></div>
         <div class="t-body">
           <div class="t-title" style="font-size:13px">${esc(t.title)}</div>
           <div class="t-meta"><span class="t-due ${dl.c}">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+          ${t.note?`<div class="t-note" style="font-size:11px">${esc(t.note)}</div>`:''}
+        </div>
+        <div class="t-actions">
+          <button class="ico" style="font-size:12px" onclick="openM('team','${t.id}')" title="Düzenle">✏️</button>
+          <button class="ico red" onclick="del('team','${t.id}')" title="Sil">✕</button>
         </div>
       </div>`;
     }).join('');
@@ -1092,7 +1207,10 @@ function renderTeamOverview(el){
       <div class="upcoming-group-head">
         <div class="upcoming-group-name">${m.name.toUpperCase()}</div>
         <span class="upcoming-urgency ${urgCls}">${urgTxt}</span>
-        <span style="font-family:var(--fm);font-size:11px;color:var(--text3);margin-left:auto">${tasks.length} GÖREV</span>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:6px">
+          <span style="font-family:var(--fm);font-size:11px;color:var(--text3)">${tasks.length} GÖREV</span>
+          <button class="ico cyan" onclick="openMailModal('${esc(m.name)}')" title="Mail gönder" style="font-size:15px">📧</button>
+        </span>
       </div>
       <div class="task-list" style="gap:6px">${taskItems}</div>
     </div>`;
@@ -1100,14 +1218,10 @@ function renderTeamOverview(el){
 }
 
 function updateBadges(){
-  const mo=data.metin.filter(t=>!t.done&&dLeft(t.due)<0).length;
-  const ma=data.metin.filter(t=>!t.done).length;
   const to=data.team.filter(t=>!t.done&&dLeft(t.due)<0).length;
   const ta=data.team.filter(t=>!t.done).length;
-  const doa=data.todo.filter(t=>!t.done).length;
-  const bm=document.getElementById('bdg-metin');bm.textContent=mo||ma;bm.className='badge'+(mo?'':(ma?' amber':' grey'));
-  const bt=document.getElementById('bdg-team');bt.textContent=to||ta;bt.className='badge'+(to?'':(ta?' amber':' grey'));
-  document.getElementById('bdg-todo').textContent=doa;
+  const bt=document.getElementById('bdg-team');
+  if(bt){bt.textContent=to||ta;bt.className='badge'+(to?'':(ta?' amber':' grey'));}
 }
 
 // ══════════════════════════════════════
