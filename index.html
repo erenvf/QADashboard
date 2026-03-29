@@ -373,6 +373,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <nav class="nav">
   <div class="nav-tab active" onclick="tab('overview')" id="tab-overview">📊 GENEL BAKIŞ</div>
   <div class="nav-tab" onclick="tab('team')" id="tab-team">👥 TAKIM LİDERLERİ <span class="badge amber" id="bdg-team">0</span></div>
+  <div class="nav-tab" onclick="tab('agenda')" id="tab-agenda">📌 GÜNDEMLER <span class="badge grey" id="bdg-agenda">0</span></div>
   <div class="nav-tab" onclick="tab('settings')" id="tab-settings">⚙ AYARLAR</div>
 </nav>
 
@@ -429,6 +430,26 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
     </div>
     <div class="team-grid" id="team-grid"></div>
+  </section>
+
+  <!-- GÜNDEMLER -->
+  <section class="section" id="sec-agenda">
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">📌 <em>GÜNDEMLER</em></div>
+      </div>
+      <button class="btn btn-primary" onclick="openAgenda()">+ GÜNDEM EKLE</button>
+    </div>
+    <!-- Active -->
+    <div id="agenda-active"></div>
+    <!-- Done -->
+    <div id="agenda-done-wrap" style="margin-top:24px;display:none">
+      <div class="sec-title" style="font-size:16px;color:var(--text3);margin-bottom:14px;cursor:pointer" onclick="toggleAgendaDone()">
+        ✓ TAMAMLANANLAR <span id="agenda-done-count" style="font-size:14px"></span>
+        <span id="agenda-done-arrow" style="font-size:12px;margin-left:6px">▼</span>
+      </div>
+      <div class="task-list" id="agenda-done" style="display:none"></div>
+    </div>
   </section>
 
   <!-- SETTINGS -->
@@ -522,6 +543,19 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="m-actions">
       <button class="btn btn-ghost" onclick="closeM('ov-task')">İPTAL</button>
       <button class="btn btn-primary" onclick="saveTask()">KAYDET</button>
+    </div>
+  </div>
+</div>
+
+<!-- AGENDA MODAL -->
+<div class="overlay" id="ov-agenda" onclick="closeOutside(event,'ov-agenda')">
+  <div class="modal">
+    <div class="m-title" id="agenda-modal-title">GÜNDEM EKLE</div>
+    <div class="fg"><label class="fl">Başlık *</label><input class="fi" id="agenda-inp-title" placeholder="Gündem başlığı..."></div>
+    <div class="fg"><label class="fl">Açıklama (opsiyonel)</label><textarea class="fta" id="agenda-inp-note" placeholder="Detay, bağlam..."></textarea></div>
+    <div class="m-actions">
+      <button class="btn btn-ghost" onclick="closeM('ov-agenda')">İPTAL</button>
+      <button class="btn btn-primary" onclick="saveAgenda()">KAYDET</button>
     </div>
   </div>
 </div>
@@ -623,9 +657,10 @@ const DEF_MEMBERS=[
   {name:'Tuba',email:''},{name:'Yezdan',email:''}
 ];
 let cfg={myName:'Eren',managerName:'Metin',signature:'Saygılarımla,\nEren\nQA Manager',members:[...DEF_MEMBERS]};
-let data={metin:[],team:[],todo:[]};
+let data={metin:[],team:[],todo:[],agenda:[]};
 let filters={metin:'all',todo:'all'};
 let mMode='',mEditId=null;
+let agendaEditId=null;
 let isSaving=false;
 
 // ── LOAD from Supabase ──────────────────
@@ -640,6 +675,7 @@ async function load(){
       if(r.category==='metin') data.metin.push(t);
       else if(r.category==='team') data.team.push(t);
       else if(r.category==='todo') data.todo.push(t);
+      else if(r.category==='agenda') data.agenda.push({id:r.id,title:r.title,note:r.note,done:r.done,createdAt:r.created_at});
     });
     // Load config
     const {data:cfgRows}=await sb.from('config').select('*');
@@ -993,7 +1029,109 @@ function teamItem(t){
 // ══════════════════════════════════════
 // RENDER SECTIONS
 // ══════════════════════════════════════
-function renderAll(){renderTeam();renderOverview();updateBadges()}
+// ══════════════════════════════════════
+// GÜNDEMLER
+// ══════════════════════════════════════
+function openAgenda(id=null){
+  agendaEditId=id;
+  document.getElementById('agenda-inp-title').value='';
+  document.getElementById('agenda-inp-note').value='';
+  document.getElementById('agenda-modal-title').textContent=id?'GÜNDEM DÜZENLE':'GÜNDEM EKLE';
+  if(id){
+    const a=data.agenda.find(x=>x.id===id);
+    if(a){document.getElementById('agenda-inp-title').value=a.title;document.getElementById('agenda-inp-note').value=a.note||'';}
+  }
+  document.getElementById('ov-agenda').classList.add('open');
+  setTimeout(()=>document.getElementById('agenda-inp-title').focus(),100);
+}
+
+async function saveAgenda(){
+  const title=document.getElementById('agenda-inp-title').value.trim();
+  if(!title){document.getElementById('agenda-inp-title').style.borderColor='var(--red)';return;}
+  document.getElementById('agenda-inp-title').style.borderColor='';
+  const note=document.getElementById('agenda-inp-note').value.trim();
+  let item;
+  if(agendaEditId){
+    const idx=data.agenda.findIndex(x=>x.id===agendaEditId);
+    if(idx!==-1){data.agenda[idx]={...data.agenda[idx],title,note};item=data.agenda[idx];}
+  }else{
+    item={id:uid(),title,note,done:false,createdAt:Date.now()};
+    data.agenda.push(item);
+  }
+  save();closeM('ov-agenda');renderAgenda();
+  const row={id:item.id,category:'agenda',title:item.title,note:item.note||null,done:item.done,created_at:item.createdAt,due:null,priority:null,assignee:null};
+  await sb.from('tasks').upsert(row);
+  toast('✅ Gündem kaydedildi','ok');
+}
+
+async function toggleAgenda(id){
+  const a=data.agenda.find(x=>x.id===id);if(!a)return;
+  a.done=!a.done;save();renderAgenda();
+  await sb.from('tasks').upsert({id:a.id,category:'agenda',title:a.title,note:a.note||null,done:a.done,created_at:a.createdAt,due:null,priority:null,assignee:null});
+}
+
+async function delAgenda(id){
+  const idx=data.agenda.findIndex(x=>x.id===id);if(idx===-1)return;
+  data.agenda.splice(idx,1);save();renderAgenda();
+  await sb.from('tasks').delete().eq('id',id);
+  toast('🗑 Gündem silindi','ok');
+}
+
+let agendaDoneOpen=false;
+function toggleAgendaDone(){
+  agendaDoneOpen=!agendaDoneOpen;
+  document.getElementById('agenda-done').style.display=agendaDoneOpen?'flex':'none';
+  document.getElementById('agenda-done-arrow').textContent=agendaDoneOpen?'▲':'▼';
+}
+
+function renderAgenda(){
+  const active=data.agenda.filter(a=>!a.done).sort((a,b)=>b.createdAt-a.createdAt);
+  const done=data.agenda.filter(a=>a.done).sort((a,b)=>b.createdAt-a.createdAt);
+
+  // Active
+  const activeEl=document.getElementById('agenda-active');
+  activeEl.innerHTML=active.length?`<div class="task-list">${active.map(a=>`
+    <div class="task-card">
+      <div class="chk" onclick="toggleAgenda('${a.id}')" title="Tamamlandı"></div>
+      <div class="t-body">
+        <div class="t-title">${esc(a.title)}</div>
+        ${a.note?`<div class="t-note">${esc(a.note)}</div>`:''}
+      </div>
+      <div class="t-actions">
+        <button class="ico" onclick="openAgenda('${a.id}')" title="Düzenle">✏️</button>
+        <button class="ico red" onclick="delAgenda('${a.id}')" title="Sil">✕</button>
+      </div>
+    </div>`).join('')}</div>`
+    :`<div class="empty"><span class="empty-icon">📌</span>Gündem yok</div>`;
+
+  // Done
+  const doneWrap=document.getElementById('agenda-done-wrap');
+  const doneEl=document.getElementById('agenda-done');
+  const doneCount=document.getElementById('agenda-done-count');
+  if(done.length){
+    doneWrap.style.display='block';
+    doneCount.textContent=`(${done.length})`;
+    doneEl.innerHTML=done.map(a=>`
+      <div class="task-card dn">
+        <div class="chk on" onclick="toggleAgenda('${a.id}')" title="Geri Al"></div>
+        <div class="t-body">
+          <div class="t-title">${esc(a.title)}</div>
+          ${a.note?`<div class="t-note">${esc(a.note)}</div>`:''}
+        </div>
+        <div class="t-actions">
+          <button class="ico red" onclick="delAgenda('${a.id}')" title="Sil">✕</button>
+        </div>
+      </div>`).join('');
+  } else {
+    doneWrap.style.display='none';
+  }
+
+  // Badge
+  const b=document.getElementById('bdg-agenda');
+  if(b){b.textContent=active.length;b.className='badge grey';}
+}
+
+function renderAll(){renderTeam();renderOverview();renderAgenda();updateBadges()}
 
 function renderMetin(){
   const el=document.getElementById('lst-metin');
