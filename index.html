@@ -671,11 +671,11 @@ async function load(){
     if(error) throw error;
     data={metin:[],team:[],todo:[],agenda:[]};
     (rows||[]).forEach(r=>{
-      const t={id:r.id,title:r.title,due:r.due,priority:r.priority,note:r.note,assignee:r.assignee,done:r.done,createdAt:r.created_at};
+      const t={id:r.id,title:r.title,due:r.due,priority:r.priority,note:r.note,assignee:r.assignee,done:r.done===true||r.done===1,createdAt:r.created_at};
       if(r.category==='metin') data.metin.push(t);
       else if(r.category==='team') data.team.push(t);
       else if(r.category==='todo') data.todo.push(t);
-      else if(r.category==='agenda') data.agenda.push({id:r.id,title:r.title,note:r.note,done:r.done,createdAt:r.created_at});
+      else if(r.category==='agenda') data.agenda.push({id:r.id,title:r.title,note:r.note,done:r.done===true||r.done===1,createdAt:r.created_at});
     });
     // Load config
     const {data:cfgRows}=await sb.from('config').select('*');
