@@ -153,17 +153,19 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .section.active{display:block}
 
 /* ═══ STAT CARDS ═══ */
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:32px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;position:relative;overflow:hidden;transition:border-color .2s}
+.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s}
 .stat-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.3)}
 .stat-card.active-filter{border-color:var(--border3);box-shadow:0 0 0 2px var(--border3)}
 .stat-card::before{content:'';position:absolute;inset:0 0 auto 0;height:2px}
 .stat-card.s-red::before{background:linear-gradient(90deg,var(--red),var(--red-g))}
 .stat-card.s-amber::before{background:linear-gradient(90deg,var(--amber),var(--amber-g))}
 .stat-card.s-blue::before{background:linear-gradient(90deg,var(--accent),var(--accent-g))}
+.stat-card.s-purple::before{background:linear-gradient(90deg,#a855f7,#c084fc)}
+.stat-card.s-purple .stat-num{color:#c084fc}
 .stat-card.s-green::before{background:linear-gradient(90deg,var(--green),var(--green-g))}
-.stat-label{font-family:var(--fm);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
-.stat-num{font-family:var(--fh);font-size:48px;line-height:1;letter-spacing:2px}
+.stat-label{font-family:var(--fm);font-size:9px;font-weight:500;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.stat-num{font-family:var(--fh);font-size:40px;line-height:1;letter-spacing:2px}
 .stat-card.s-red .stat-num{color:var(--red-g)}
 .stat-card.s-amber .stat-num{color:var(--amber-g)}
 .stat-card.s-blue .stat-num{color:var(--accent-g)}
@@ -395,15 +397,26 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="stat-row">
       <div class="stat-card s-red" onclick="setOvFilter('overdue',this)" style="cursor:pointer"><div class="stat-label">⚠ GECİKEN</div><div class="stat-num" id="s-ov">0</div></div>
       <div class="stat-card s-amber" onclick="setOvFilter('today',this)" style="cursor:pointer"><div class="stat-label">⏰ BUGÜN BİTİYOR</div><div class="stat-num" id="s-td">0</div></div>
-      <div class="stat-card s-blue" onclick="setOvFilter('upcoming',this)" style="cursor:pointer"><div class="stat-label">📅 YAKLAŞAN · 7 GÜN</div><div class="stat-num" id="s-up">0</div></div>
+      <div class="stat-card s-blue" onclick="setOvFilter('upcoming',this)" style="cursor:pointer"><div class="stat-label">📅 YAKLAŞAN · 3 GÜN</div><div class="stat-num" id="s-up">0</div></div>
+      <div class="stat-card s-purple" onclick="setOvFilter('later',this)" style="cursor:pointer"><div class="stat-label">🗓 4+ GÜN KALAN</div><div class="stat-num" id="s-lt">0</div></div>
       <div class="stat-card s-green" onclick="setOvFilter('done',this)" style="cursor:pointer"><div class="stat-label">✓ TAMAMLANAN</div><div class="stat-num" id="s-dn">0</div></div>
     </div>
+    <!-- TÜMÜ filter bar (tab seçilmediğinde) -->
+    <div id="ov-filter-bar-all" class="filter-bar" style="display:flex">
+      <span class="chip active" onclick="setOvChip('all',this)">TÜMÜ</span>
+      <span class="chip" onclick="setOvChip('overdue',this)">⚠ GECİKEN</span>
+      <span class="chip" onclick="setOvChip('today',this)">⏰ BUGÜN</span>
+      <span class="chip" onclick="setOvChip('upcoming',this)">📅 YAKLAŞAN 3 GÜN</span>
+      <span class="chip" onclick="setOvChip('later',this)">🗓 4+ GÜN KALAN</span>
+      <span class="chip" onclick="setOvChip('done',this)">✓ TAMAMLANAN</span>
+    </div>
     <!-- METİN filter bar -->
-    <div id="ov-filter-bar-metin" class="filter-bar" style="display:flex">
+    <div id="ov-filter-bar-metin" class="filter-bar" style="display:none">
       <span class="chip active" onclick="setF('metin','all',this);renderOverview()">TÜMÜ</span>
       <span class="chip" onclick="setF('metin','overdue',this);renderOverview()">⚠ GECİKEN</span>
       <span class="chip" onclick="setF('metin','today',this);renderOverview()">⏰ BUGÜN</span>
-      <span class="chip" onclick="setF('metin','upcoming',this);renderOverview()">📅 YAKLAŞAN</span>
+      <span class="chip" onclick="setF('metin','upcoming',this);renderOverview()">📅 YAKLAŞAN 3 GÜN</span>
+      <span class="chip" onclick="setF('metin','later',this);renderOverview()">🗓 4+ GÜN KALAN</span>
       <span class="chip" onclick="setF('metin','done',this);renderOverview()">✓ TAMAMLANAN</span>
     </div>
     <!-- TODO filter bar -->
@@ -411,8 +424,18 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <span class="chip active" onclick="setF('todo','all',this);renderOverview()">TÜMÜ</span>
       <span class="chip" onclick="setF('todo','overdue',this);renderOverview()">⚠ GECİKEN</span>
       <span class="chip" onclick="setF('todo','today',this);renderOverview()">⏰ BUGÜN</span>
-      <span class="chip" onclick="setF('todo','upcoming',this);renderOverview()">📅 YAKLAŞAN</span>
+      <span class="chip" onclick="setF('todo','upcoming',this);renderOverview()">📅 YAKLAŞAN 3 GÜN</span>
+      <span class="chip" onclick="setF('todo','later',this);renderOverview()">🗓 4+ GÜN KALAN</span>
       <span class="chip" onclick="setF('todo','done',this);renderOverview()">✓ TAMAMLANAN</span>
+    </div>
+    <!-- TAKIM filter bar -->
+    <div id="ov-filter-bar-team" class="filter-bar" style="display:none">
+      <span class="chip active" onclick="setOvTeamChip('all',this)">TÜMÜ</span>
+      <span class="chip" onclick="setOvTeamChip('overdue',this)">⚠ GECİKEN</span>
+      <span class="chip" onclick="setOvTeamChip('today',this)">⏰ BUGÜN</span>
+      <span class="chip" onclick="setOvTeamChip('upcoming',this)">📅 YAKLAŞAN 3 GÜN</span>
+      <span class="chip" onclick="setOvTeamChip('later',this)">🗓 4+ GÜN KALAN</span>
+      <span class="chip" onclick="setOvTeamChip('done',this)">✓ TAMAMLANAN</span>
     </div>
     <div class="sec-title" style="font-size:16px;margin-bottom:14px;color:var(--text2)" id="ov-urgent-title">ACİL & YAKLAŞAN</div>
     <div class="task-list" id="ov-list"></div>
@@ -720,14 +743,14 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 // ══════════════════════════════════════
 function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function dLeft(due){if(!due)return null;return Math.round((new Date(due)-new Date(todayStr()))/86400000)}
-function dSt(due,done){if(done)return'done';const d=dLeft(due);if(d===null)return'ok';if(d<0)return'ov';if(d===0)return'td';if(d<=7)return'sn';return'ok'}
+function dSt(due,done){if(done)return'done';const d=dLeft(due);if(d===null)return'ok';if(d<0)return'ov';if(d===0)return'td';if(d<=3)return'sn';return'ok'}
 function dLbl(due,done){
   if(done)return{c:'ok',t:'Tamamlandı'};
   const d=dLeft(due);if(d===null)return{c:'ok',t:'—'};
   const f=fmtD(due);
   if(d<0)return{c:'ov',t:`▲ ${Math.abs(d)} gün gecikti · ${f}`};
   if(d===0)return{c:'td',t:`⏰ Bugün bitiyor · ${f}`};
-  if(d<=7)return{c:'sn',t:`${d} gün kaldı · ${f}`};
+  if(d<=3)return{c:'sn',t:`${d} gün kaldı · ${f}`};
   return{c:'ok',t:`${d} gün · ${f}`};
 }
 function fmtD(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d} ${['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][+m-1]} ${y}`}
@@ -992,7 +1015,8 @@ function applyF(tasks,f){
   if(f==='done')return tasks.filter(t=>t.done);
   if(f==='overdue')return tasks.filter(t=>!t.done&&dLeft(t.due)<0);
   if(f==='today')return tasks.filter(t=>!t.done&&dLeft(t.due)===0);
-  if(f==='upcoming')return tasks.filter(t=>!t.done&&dLeft(t.due)>0);
+  if(f==='upcoming')return tasks.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=3);
+  if(f==='later')return tasks.filter(t=>!t.done&&dLeft(t.due)>3);
   return tasks;
 }
 function sortT(arr){
@@ -1188,7 +1212,6 @@ let ovMode=null; // null=tümü, 'metin'|'team'|'todo'
 let ovFilter='active';
 
 function switchOv(mode, el){
-  // Toggle: aynı taba tekrar tıklanırsa tümüne dön
   if(ovMode===mode){
     ovMode=null;
     document.querySelectorAll('.ov-tab').forEach(t=>t.classList.remove('active'));
@@ -1199,8 +1222,29 @@ function switchOv(mode, el){
   }
   ovFilter='active';
   document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
+  // Filter bar görünürlüğü
+  document.getElementById('ov-filter-bar-all').style.display=ovMode===null?'flex':'none';
   document.getElementById('ov-filter-bar-metin').style.display=ovMode==='metin'?'flex':'none';
   document.getElementById('ov-filter-bar-todo').style.display=ovMode==='todo'?'flex':'none';
+  document.getElementById('ov-filter-bar-team').style.display=ovMode==='team'?'flex':'none';
+  renderOverview();
+}
+
+// Tümü modu chip filtresi
+function setOvChip(val, el){
+  el.closest('.filter-bar').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  ovFilter=val==='all'?'active':val;
+  document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
+  renderOverview();
+}
+
+// Takım modu chip filtresi
+function setOvTeamChip(val, el){
+  el.closest('.filter-bar').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  ovFilter=val==='all'?'active':val;
+  document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
   renderOverview();
 }
 
@@ -1222,11 +1266,12 @@ function renderOverview(){
             : ovMode==='team' ? data.team
             : data.todo;
 
-  let ov=0,td=0,up=0,dn=0;
-  src.forEach(t=>{if(t.done){dn++;return;}const d=dLeft(t.due);if(d<0)ov++;else if(d===0)td++;else if(d<=7)up++;});
+  let ov=0,td=0,up=0,lt=0,dn=0;
+  src.forEach(t=>{if(t.done){dn++;return;}const d=dLeft(t.due);if(d===null)return;if(d<0)ov++;else if(d===0)td++;else if(d<=3)up++;else lt++;});
   document.getElementById('s-ov').textContent=ov;
   document.getElementById('s-td').textContent=td;
   document.getElementById('s-up').textContent=up;
+  document.getElementById('s-lt').textContent=lt;
   document.getElementById('s-dn').textContent=dn;
 
   const el=document.getElementById('ov-list');
@@ -1234,7 +1279,7 @@ function renderOverview(){
 
   // TAKIM: kişi bazlı gruplu görünüm
   if(ovMode==='team'){
-    titleEl.textContent = ovFilter==='done'?'TAMAMLANAN GÖREVLER':ovFilter==='overdue'?'GECİKEN GÖREVLER':ovFilter==='today'?'BUGÜN BİTEN GÖREVLER':ovFilter==='upcoming'?'YAKLAŞAN GÖREVLER (7 GÜN)':'KİŞİ BAZLI · TÜM AKTİF GÖREVLER';
+    titleEl.textContent = ovFilter==='done'?'TAMAMLANAN GÖREVLER':ovFilter==='overdue'?'GECİKEN GÖREVLER':ovFilter==='today'?'BUGÜN BİTEN GÖREVLER':ovFilter==='upcoming'?'YAKLAŞAN GÖREVLER (3 GÜN)':ovFilter==='later'?'4+ GÜN KALAN GÖREVLER':'KİŞİ BAZLI · TÜM AKTİF GÖREVLER';
     renderTeamOverview(el);
     return;
   }
@@ -1253,10 +1298,13 @@ function renderOverview(){
   } else if(ovFilter==='today'){
     tasks=src.filter(t=>!t.done&&dLeft(t.due)===0);title='BUGÜN BİTEN GÖREVLER';
   } else if(ovFilter==='upcoming'){
-    tasks=src.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=7);title='YAKLAŞAN GÖREVLER · 7 GÜN';
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=3);title='YAKLAŞAN GÖREVLER · 3 GÜN';
+  } else if(ovFilter==='later'){
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)>3);title='4+ GÜN KALAN GÖREVLER';
   } else {
     tasks=applyF(src,chipFilter);
-    title=ovMode===null?'TÜM GÖREVLER':chipFilter==='done'?'TAMAMLANAN GÖREVLER':chipFilter==='overdue'?'GECİKEN GÖREVLER':chipFilter==='today'?'BUGÜN BİTEN GÖREVLER':chipFilter==='upcoming'?'YAKLAŞAN GÖREVLER':'TÜM GÖREVLER';
+    const titleMap={all:'TÜM GÖREVLER',done:'TAMAMLANAN GÖREVLER',overdue:'GECİKEN GÖREVLER',today:'BUGÜN BİTEN GÖREVLER',upcoming:'YAKLAŞAN GÖREVLER · 3 GÜN',later:'4+ GÜN KALAN GÖREVLER'};
+    title=ovMode===null?titleMap[chipFilter]||'TÜM GÖREVLER':titleMap[chipFilter]||'TÜM GÖREVLER';
   }
 
   titleEl.textContent=title;
@@ -1320,7 +1368,8 @@ function renderTeamOverview(el){
     if(ovFilter==='done') tasks=tasks.filter(t=>t.done);
     else if(ovFilter==='overdue') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)<0);
     else if(ovFilter==='today') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)===0);
-    else if(ovFilter==='upcoming') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=7);
+    else if(ovFilter==='upcoming') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=3);
+    else if(ovFilter==='later') tasks=tasks.filter(t=>!t.done&&dLeft(t.due)>3);
     else tasks=tasks.filter(t=>!t.done);
     if(!tasks.length) return;
     const sTasks=[...tasks].sort((a,b)=>{
