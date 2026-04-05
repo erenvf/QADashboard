@@ -555,13 +555,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none">📅</span>
       </div>
     </div>
-    <div class="fg"><label class="fl">Öncelik</label>
-      <select class="fs" id="inp-pri">
-        <option value="high">● Yüksek</option>
-        <option value="mid" selected>● Orta</option>
-        <option value="low">● Düşük</option>
-      </select>
-    </div>
     <div class="fg"><label class="fl">Not</label><textarea class="fta" id="inp-note" placeholder="Ek bilgi..."></textarea></div>
     <div class="m-actions">
       <button class="btn btn-ghost" onclick="closeM('ov-task')">İPTAL</button>
@@ -742,6 +735,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 // DATE
 // ══════════════════════════════════════
 function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function plusDays(n){const d=new Date();d.setDate(d.getDate()+n);return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function dLeft(due){if(!due)return null;return Math.round((new Date(due)-new Date(todayStr()))/86400000)}
 function dSt(due,done){if(done)return'done';const d=dLeft(due);if(d===null)return'ok';if(d<0)return'ov';if(d===0)return'td';if(d<=3)return'sn';return'ok'}
 function dLbl(due,done){
@@ -796,7 +790,7 @@ function openMFromOverview(){
 function openM(mode,id=null){
   mMode=mode;mEditId=id;
   ['inp-title','inp-note'].forEach(x=>document.getElementById(x).value='');
-  document.getElementById('inp-due').value=todayStr();
+  document.getElementById('inp-due').value=plusDays(7);
   document.getElementById('inp-pri').value='mid';
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   document.getElementById('inp-ass').innerHTML='<option value="">Seç...</option>'+sorted.map(m=>`<option>${esc(m.name)}</option>`).join('');
@@ -1030,7 +1024,7 @@ function taskCard(t,aName){
     <div class="chk ${t.done?'on':''}" onclick="toggle('${aName}','${t.id}')"></div>
     <div class="t-body">
       <div class="t-title">${esc(t.title)}</div>
-      <div class="t-meta"><span class="t-due ${dl.c}">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+      <div class="t-meta"><span class="t-due ${dl.c}">📅 ${dl.t}</span></div>
       ${t.note?`<div class="t-note">${esc(t.note)}</div>`:''}
     </div>
     <div class="t-actions">
@@ -1046,7 +1040,7 @@ function teamItem(t){
     <div class="chk ${t.done?'on':''}" style="width:16px;height:16px;margin-top:2px" onclick="toggle('team','${t.id}')"></div>
     <div class="ti-body">
       <div class="ti-title">${esc(t.title)}</div>
-      <div class="ti-meta"><span class="t-due ${dl.c}" style="font-size:10px">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+      <div class="ti-meta"><span class="t-due ${dl.c}" style="font-size:10px">📅 ${dl.t}</span></div>
       ${t.note?`<div class="t-note" style="font-size:11px">${esc(t.note)}</div>`:''}
     </div>
     <div class="t-actions">
@@ -1348,7 +1342,7 @@ function renderOverview(){
       <div class="chk ${t.done?'on':''}" onclick="${toggleCall}" title="${t.done?'Geri Al':'Tamamlandı'}"></div>
       <div class="t-body">
         <div class="t-title">${esc(t.title)}</div>
-        <div class="t-meta">${catLabel}${urgBadge}<span class="t-due ${dl.c}">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+        <div class="t-meta">${catLabel}${urgBadge}<span class="t-due ${dl.c}">📅 ${dl.t}</span></div>
         ${t.note?`<div class="t-note">${esc(t.note)}</div>`:''}
       </div>
       <div class="t-actions">
@@ -1401,7 +1395,7 @@ function renderTeamOverview(el){
         <div class="chk ${t.done?'on':''}" onclick="toggle('team','${t.id}');renderOverview()" title="${t.done?'Geri Al':'Tamamlandı'}"></div>
         <div class="t-body">
           <div class="t-title" style="font-size:13px">${esc(t.title)}</div>
-          <div class="t-meta"><span class="t-due ${dl.c}">📅 ${dl.t}</span>${priBadge(t.priority)}</div>
+          <div class="t-meta"><span class="t-due ${dl.c}">📅 ${dl.t}</span></div>
           ${t.note?`<div class="t-note" style="font-size:11px">${esc(t.note)}</div>`:''}
         </div>
         <div class="t-actions">
