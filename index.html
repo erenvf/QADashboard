@@ -727,14 +727,6 @@ function tab(id){
 // ══════════════════════════════════════
 // MODAL
 // ══════════════════════════════════════
-function updatePriColor(){
-  const sel=document.getElementById('inp-pri');
-  sel.className='fs';
-  if(sel.value==='high') sel.classList.add('p-high');
-  else if(sel.value==='mid') sel.classList.add('p-mid');
-  else sel.classList.add('p-low');
-}
-
 function arr_(m){return m==='team'?data.team:m==='metin'?data.metin:data.todo}
 
 // Kategori seçici (yeni görev eklerken)
@@ -779,15 +771,12 @@ function openM(mode,id=null){
     if(t){
       document.getElementById('inp-title').value=t.title;
       document.getElementById('inp-due').value=t.due||'';
-      document.getElementById('inp-pri').value=t.priority||'mid';
       document.getElementById('inp-note').value=t.note||'';
       if(mode==='team')document.getElementById('inp-ass').value=t.assignee||'';
     }
   }
   document.getElementById('ov-task').classList.add('open');
   setTimeout(()=>document.getElementById('inp-title').focus(),100);
-  updatePriColor();
-  document.getElementById('inp-pri').onchange=updatePriColor;
 }
 function closeM(id){document.getElementById(id).classList.remove('open')}
 function closeOutside(e,id){if(e.target===document.getElementById(id))closeM(id)}
@@ -797,16 +786,15 @@ async function saveTask(){
   if(!title){document.getElementById('inp-title').style.borderColor='var(--red)';return;}
   document.getElementById('inp-title').style.borderColor='';
   const due=document.getElementById('inp-due').value;
-  const priority=document.getElementById('inp-pri').value;
   const note=document.getElementById('inp-note').value.trim();
   const assignee=document.getElementById('inp-ass').value;
   const arr=arr_(mMode);
   let task;
   if(mEditId){
     const idx=arr.findIndex(t=>t.id===mEditId);
-    if(idx!==-1){arr[idx]={...arr[idx],title,due,priority,note,assignee};task=arr[idx];}
+    if(idx!==-1){arr[idx]={...arr[idx],title,due,note,assignee};task=arr[idx];}
   }else{
-    task={id:uid(),title,due,priority,note,assignee,done:false,createdAt:Date.now()};
+    task={id:uid(),title,due,note,assignee,done:false,createdAt:Date.now()};
     arr.push(task);
   }
   save();closeM('ov-task');renderAll();
