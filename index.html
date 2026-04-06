@@ -401,43 +401,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="stat-card s-purple" onclick="setOvFilter('later',this)" style="cursor:pointer"><div class="stat-label">🗓 4+ GÜN KALAN</div><div class="stat-num" id="s-lt">0</div></div>
       <div class="stat-card s-green" onclick="setOvFilter('done',this)" style="cursor:pointer"><div class="stat-label">✓ TAMAMLANAN</div><div class="stat-num" id="s-dn">0</div></div>
     </div>
-    <!-- TÜMÜ filter bar (tab seçilmediğinde) -->
-    <div id="ov-filter-bar-all" class="filter-bar" style="display:flex">
-      <span class="chip active" onclick="setOvChip('all',this)">TÜMÜ</span>
-      <span class="chip" onclick="setOvChip('overdue',this)">⚠ GECİKEN</span>
-      <span class="chip" onclick="setOvChip('today',this)">⏰ BUGÜN</span>
-      <span class="chip" onclick="setOvChip('upcoming',this)">📅 YAKLAŞAN 3 GÜN</span>
-      <span class="chip" onclick="setOvChip('later',this)">🗓 4+ GÜN KALAN</span>
-      <span class="chip" onclick="setOvChip('done',this)">✓ TAMAMLANAN</span>
-    </div>
-    <!-- METİN filter bar -->
-    <div id="ov-filter-bar-metin" class="filter-bar" style="display:none">
-      <span class="chip active" onclick="setF('metin','all',this);renderOverview()">TÜMÜ</span>
-      <span class="chip" onclick="setF('metin','overdue',this);renderOverview()">⚠ GECİKEN</span>
-      <span class="chip" onclick="setF('metin','today',this);renderOverview()">⏰ BUGÜN</span>
-      <span class="chip" onclick="setF('metin','upcoming',this);renderOverview()">📅 YAKLAŞAN 3 GÜN</span>
-      <span class="chip" onclick="setF('metin','later',this);renderOverview()">🗓 4+ GÜN KALAN</span>
-      <span class="chip" onclick="setF('metin','done',this);renderOverview()">✓ TAMAMLANAN</span>
-    </div>
-    <!-- TODO filter bar -->
-    <div id="ov-filter-bar-todo" class="filter-bar" style="display:none">
-      <span class="chip active" onclick="setF('todo','all',this);renderOverview()">TÜMÜ</span>
-      <span class="chip" onclick="setF('todo','overdue',this);renderOverview()">⚠ GECİKEN</span>
-      <span class="chip" onclick="setF('todo','today',this);renderOverview()">⏰ BUGÜN</span>
-      <span class="chip" onclick="setF('todo','upcoming',this);renderOverview()">📅 YAKLAŞAN 3 GÜN</span>
-      <span class="chip" onclick="setF('todo','later',this);renderOverview()">🗓 4+ GÜN KALAN</span>
-      <span class="chip" onclick="setF('todo','done',this);renderOverview()">✓ TAMAMLANAN</span>
-    </div>
-    <!-- TAKIM filter bar -->
-    <div id="ov-filter-bar-team" class="filter-bar" style="display:none">
-      <span class="chip active" onclick="setOvTeamChip('all',this)">TÜMÜ</span>
-      <span class="chip" onclick="setOvTeamChip('overdue',this)">⚠ GECİKEN</span>
-      <span class="chip" onclick="setOvTeamChip('today',this)">⏰ BUGÜN</span>
-      <span class="chip" onclick="setOvTeamChip('upcoming',this)">📅 YAKLAŞAN 3 GÜN</span>
-      <span class="chip" onclick="setOvTeamChip('later',this)">🗓 4+ GÜN KALAN</span>
-      <span class="chip" onclick="setOvTeamChip('done',this)">✓ TAMAMLANAN</span>
-    </div>
-    <div class="sec-title" style="font-size:16px;margin-bottom:14px;color:var(--text2)" id="ov-urgent-title">ACİL & YAKLAŞAN</div>
+    <div class="sec-title" style="font-size:16px;margin-bottom:14px;color:var(--text2)" id="ov-urgent-title">TÜM GÖREVLER</div>
     <div class="task-list" id="ov-list"></div>
   </section>
 
@@ -1216,11 +1180,6 @@ function switchOv(mode, el){
   }
   ovFilter='active';
   document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
-  // Filter bar görünürlüğü
-  document.getElementById('ov-filter-bar-all').style.display=ovMode===null?'flex':'none';
-  document.getElementById('ov-filter-bar-metin').style.display=ovMode==='metin'?'flex':'none';
-  document.getElementById('ov-filter-bar-todo').style.display=ovMode==='todo'?'flex':'none';
-  document.getElementById('ov-filter-bar-team').style.display=ovMode==='team'?'flex':'none';
   renderOverview();
 }
 
@@ -1243,9 +1202,10 @@ function setOvTeamChip(val, el){
 }
 
 function setOvFilter(filter, cardEl){
-  // Toggle: tıklanan kart zaten aktifse sıfırla
-  if(ovFilter===filter){ ovFilter='active'; cardEl.classList.remove('active-filter'); }
-  else {
+  if(ovFilter===filter){
+    ovFilter='active';
+    cardEl.classList.remove('active-filter');
+  } else {
     ovFilter=filter;
     document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
     cardEl.classList.add('active-filter');
@@ -1273,32 +1233,27 @@ function renderOverview(){
 
   // TAKIM: kişi bazlı gruplu görünüm
   if(ovMode==='team'){
-    titleEl.textContent = ovFilter==='done'?'TAMAMLANAN GÖREVLER':ovFilter==='overdue'?'GECİKEN GÖREVLER':ovFilter==='today'?'BUGÜN BİTEN GÖREVLER':ovFilter==='upcoming'?'YAKLAŞAN GÖREVLER (3 GÜN)':ovFilter==='later'?'4+ GÜN KALAN GÖREVLER':'KİŞİ BAZLI · TÜM AKTİF GÖREVLER';
+    titleEl.textContent = ovFilter==='done'?'TAMAMLANAN GÖREVLER':ovFilter==='overdue'?'GECİKEN GÖREVLER':ovFilter==='today'?'BUGÜN BİTEN GÖREVLER':ovFilter==='upcoming'?'YAKLAŞAN GÖREVLER (3 GÜN)':ovFilter==='later'?'4+ GÜN KALAN GÖREVLER':'TÜM AKTİF GÖREVLER';
     renderTeamOverview(el);
     return;
   }
 
-  // NULL (tümü) veya METİN/TODO
   const aName = ovMode==='metin'?'metin':ovMode==='todo'?'todo':null;
-  const chipFilter = ovMode==='metin'?filters.metin:ovMode==='todo'?filters.todo:'all';
 
-  let tasks;
-  let title;
-
+  let tasks, title;
   if(ovFilter==='done'){
-    tasks=src.filter(t=>t.done);title='TAMAMLANAN GÖREVLER';
+    tasks=src.filter(t=>t.done); title='TAMAMLANAN GÖREVLER';
   } else if(ovFilter==='overdue'){
-    tasks=src.filter(t=>!t.done&&dLeft(t.due)<0);title='GECİKEN GÖREVLER';
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)<0); title='GECİKEN GÖREVLER';
   } else if(ovFilter==='today'){
-    tasks=src.filter(t=>!t.done&&dLeft(t.due)===0);title='BUGÜN BİTEN GÖREVLER';
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)===0); title='BUGÜN BİTEN GÖREVLER';
   } else if(ovFilter==='upcoming'){
-    tasks=src.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=3);title='YAKLAŞAN GÖREVLER · 3 GÜN';
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)>0&&dLeft(t.due)<=3); title='YAKLAŞAN GÖREVLER · 3 GÜN';
   } else if(ovFilter==='later'){
-    tasks=src.filter(t=>!t.done&&dLeft(t.due)>3);title='4+ GÜN KALAN GÖREVLER';
+    tasks=src.filter(t=>!t.done&&dLeft(t.due)>3); title='4+ GÜN KALAN GÖREVLER';
   } else {
-    tasks=applyF(src,chipFilter);
-    const titleMap={all:'TÜM GÖREVLER',done:'TAMAMLANAN GÖREVLER',overdue:'GECİKEN GÖREVLER',today:'BUGÜN BİTEN GÖREVLER',upcoming:'YAKLAŞAN GÖREVLER · 3 GÜN',later:'4+ GÜN KALAN GÖREVLER'};
-    title=ovMode===null?titleMap[chipFilter]||'TÜM GÖREVLER':titleMap[chipFilter]||'TÜM GÖREVLER';
+    // Default: tamamlanan hariç tüm aktif görevler
+    tasks=src.filter(t=>!t.done); title='TÜM GÖREVLER';
   }
 
   titleEl.textContent=title;
