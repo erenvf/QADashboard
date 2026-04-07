@@ -747,7 +747,6 @@ function openM(mode,id=null){
   mMode=mode;mEditId=id;
   ['inp-title','inp-note'].forEach(x=>document.getElementById(x).value='');
   document.getElementById('inp-due').value=plusDays(7);
-  document.getElementById('inp-pri').value='mid';
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   document.getElementById('inp-ass').innerHTML='<option value="">Seç...</option>'+sorted.map(m=>`<option>${esc(m.name)}</option>`).join('');
   document.getElementById('fg-ass').style.display=mode==='team'?'block':'none';
