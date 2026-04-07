@@ -941,7 +941,32 @@ function updateLabels(){
 // EXPORT / IMPORT / CLEAR
 // ══════════════════════════════════════
 function expData(){const blob=new Blob([JSON.stringify({data,cfg},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`qa-${todayStr()}.json`;a.click();toast('📤 Dışa aktarıldı','ok')}
-function impData(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(p.data)data=p.data;if(p.cfg)cfg={...cfg,...p.cfg};save();renderAll();renderSettings();updateLabels();toast('✅ İçe aktarıldı','ok');}catch{toast('❌ Geçersiz dosya','err');}};r.readAsText(f);ev.target.value=''}
+async function impData(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=async e=>{
+    try{
+      const p=JSON.parse(e.target.result);
+      if(p.data)data={metin:[],team:[],todo:[],agenda:[],...p.data};
+      if(p.cfg)cfg={...cfg,...p.cfg};
+      save();renderAll();renderSettings();updateLabels();
+      toast('💾 Supabase\'e yazılıyor...','');
+      // Tüm görevleri Supabase'e yaz
+      const allTasks=[
+        ...(data.metin||[]).map(t=>({...t,category:'metin'})),
+        ...(data.team||[]).map(t=>({...t,category:'team'})),
+        ...(data.todo||[]).map(t=>({...t,category:'todo'})),
+        ...(data.agenda||[]).map(t=>({...t,category:'agenda'})),
+      ];
+      for(const t of allTasks){
+        await sb.from('tasks').upsert({id:t.id,category:t.category,title:t.title,due:t.due||null,priority:t.priority||null,note:t.note||null,assignee:t.assignee||null,done:t.done,created_at:t.createdAt});
+      }
+      await saveCfgToDb();
+      toast('✅ İçe aktarıldı','ok');
+    }catch{toast('❌ Geçersiz dosya','err');}
+  };
+  r.readAsText(f);ev.target.value='';
+}
 async function clrDone(sec){
   if(!confirm('Tamamlanan görevler silinecek. Emin misin?'))return;
   const cats=sec==='all'?['metin','team','todo']:[sec];
@@ -969,11 +994,6 @@ async function resetAll(){
 // RENDER HELPERS
 // ══════════════════════════════════════
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function priBadge(p){
-  if(p==='high')return'<span class="pri pri-h">YÜKSEK</span>';
-  if(p==='low')return'<span class="pri pri-l">DÜŞÜK</span>';
-  return'<span class="pri pri-m">ORTA</span>';
-}
 function applyF(tasks,f){
   if(f==='all')return tasks;
   if(f==='done')return tasks.filter(t=>t.done);
@@ -1128,17 +1148,6 @@ function renderAgenda(){
 }
 
 function renderAll(){renderTeam();renderOverview();renderAgenda();updateBadges()}
-
-function renderMetin(){
-  const el=document.getElementById('lst-metin');
-  const tasks=sortT(applyF(data.metin,filters.metin));
-  el.innerHTML=tasks.length?tasks.map(t=>taskCard(t,'metin')).join(''):`<div class="empty"><span class="empty-icon">📭</span>Görev yok</div>`;
-}
-function renderTodo(){
-  const el=document.getElementById('lst-todo');
-  const tasks=sortT(applyF(data.todo,filters.todo));
-  el.innerHTML=tasks.length?tasks.map(t=>taskCard(t,'todo')).join(''):`<div class="empty"><span class="empty-icon">📋</span>To-do yok</div>`;
-}
 function renderTeam(){
   const sorted=[...cfg.members].sort((a,b)=>a.name.localeCompare(b.name,'tr'));
   document.getElementById('team-grid').innerHTML=sorted.map((m,si)=>{
@@ -1189,19 +1198,13 @@ function switchOv(mode, el){
   renderOverview();
 }
 
-// Tümü modu chip filtresi
+// Chip filtresi (artık kullanılmıyor ama güvenli bırakıldı)
 function setOvChip(val, el){
-  el.closest('.filter-bar').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
   ovFilter=val==='all'?'active':val;
   document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
   renderOverview();
 }
-
-// Takım modu chip filtresi
 function setOvTeamChip(val, el){
-  el.closest('.filter-bar').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
   ovFilter=val==='all'?'active':val;
   document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active-filter'));
   renderOverview();
